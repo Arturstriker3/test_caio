@@ -33,5 +33,6 @@ export function createDatabasePool(config: DatabaseConfig): Pool {
     connectionLimit: 10,
     queueLimit: 0,
     enableKeepAlive: true,
+    timezone: 'Z',
   });
 }

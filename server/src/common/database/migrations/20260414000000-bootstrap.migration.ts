@@ -5,12 +5,10 @@ const migration = {
   up: async (_connection: PoolConnection): Promise<void> => {
     void _connection;
     await Promise.resolve();
-    // Initial migration placeholder for project bootstrap.
   },
   down: async (_connection: PoolConnection): Promise<void> => {
     void _connection;
     await Promise.resolve();
-    // Initial rollback placeholder for project bootstrap.
   },
 };
 
