@@ -18,7 +18,7 @@ function makeIdeaEntity(): IdeaEntity {
 describe('CreateIdeaUseCase', () => {
   it('deve criar ideia via repositório', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),

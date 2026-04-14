@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiCreatedResponse,
@@ -9,8 +9,10 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
+import { PaginationQueryDto } from '../../common/pagination/dto/pagination-query.dto';
 import { CreateIdeaRequestDto } from './dto/create-idea-request.dto';
 import { IdeaIdParamDto } from './dto/idea-id-param.dto';
+import { ListIdeasResponseDto } from './dto/list-ideas-response.dto';
 import { IdeaResponseDto } from './dto/idea-response.dto';
 import { UpdateIdeaRequestDto } from './dto/update-idea-request.dto';
 import { CreateIdeaUseCase } from './use-cases/create-idea.use-case';
@@ -32,10 +34,11 @@ export class IdeaController {
 
   @Get()
   @ApiOperation({ summary: 'List ideas' })
-  @ApiOkResponse({ type: IdeaResponseDto, isArray: true })
-  async listIdeas(): Promise<IdeaResponseDto[]> {
-    const ideas = await this.listIdeasUseCase.execute();
-    return IdeaResponseDto.fromEntities(ideas);
+  @ApiOkResponse({ type: ListIdeasResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid request data.' })
+  async listIdeas(@Query() query: PaginationQueryDto): Promise<ListIdeasResponseDto> {
+    const result = await this.listIdeasUseCase.execute(query);
+    return ListIdeasResponseDto.fromPaginatedEntities(result);
   }
 
   @Get(':id')

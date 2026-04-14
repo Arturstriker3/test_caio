@@ -15,21 +15,33 @@ function makeIdeaEntity(id: string): IdeaEntity {
 }
 
 describe('ListIdeasUseCase', () => {
-  it('deve listar ideias via repositório', async () => {
+  it('deve listar ideias paginadas via repositório', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
       delete: jest.fn(),
     };
     const useCase = new ListIdeasUseCase(repository);
+    const query = { page: 1, pageSize: 10 };
     const ideas = [makeIdeaEntity('018f3222-08b0-7f0d-a730-6f4f6b28f641'), makeIdeaEntity('018f3222-08b0-7f0d-a730-6f4f6b28f642')];
-    repository.findAll.mockResolvedValue(ideas);
+    const paginatedResult = {
+      items: ideas,
+      meta: {
+        page: 1,
+        pageSize: 10,
+        totalItems: 2,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    };
+    repository.findAllPaginated.mockResolvedValue(paginatedResult);
 
-    const result = await useCase.execute();
+    const result = await useCase.execute(query);
 
-    expect(repository.findAll).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(ideas);
+    expect(repository.findAllPaginated).toHaveBeenCalledWith(query);
+    expect(result).toEqual(paginatedResult);
   });
 });

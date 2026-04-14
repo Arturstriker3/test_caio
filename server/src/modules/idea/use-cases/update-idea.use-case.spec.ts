@@ -19,7 +19,7 @@ function makeIdeaEntity(): IdeaEntity {
 describe('UpdateIdeaUseCase', () => {
   it('deve atualizar ideia quando encontrada', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -38,7 +38,7 @@ describe('UpdateIdeaUseCase', () => {
 
   it('deve lançar NotFoundException quando não encontrar ideia', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),

@@ -1,4 +1,6 @@
+import { PaginationQueryDto } from '../../common/pagination/dto/pagination-query.dto';
 import { IdeaIdParamDto } from './dto/idea-id-param.dto';
+import { ListIdeasResponseDto } from './dto/list-ideas-response.dto';
 import { IdeaResponseDto } from './dto/idea-response.dto';
 import { UpdateIdeaRequestDto } from './dto/update-idea-request.dto';
 import { CreateIdeaRequestDto } from './dto/create-idea-request.dto';
@@ -46,14 +48,26 @@ describe('IdeaController', () => {
     );
   });
 
-  it('deve listar ideias mapeando para IdeaResponseDto', async () => {
+  it('deve listar ideias com metadados de paginação', async () => {
     const idea = makeIdeaEntity();
-    listIdeasUseCase.execute.mockResolvedValue([idea]);
+    const query: PaginationQueryDto = { page: 1, pageSize: 10 };
+    const paginatedResult = {
+      items: [idea],
+      meta: {
+        page: 1,
+        pageSize: 10,
+        totalItems: 1,
+        totalPages: 1,
+        hasNextPage: false,
+        hasPreviousPage: false,
+      },
+    };
+    listIdeasUseCase.execute.mockResolvedValue(paginatedResult);
 
-    const result = await controller.listIdeas();
+    const result = await controller.listIdeas(query);
 
-    expect(listIdeasUseCase.execute).toHaveBeenCalledTimes(1);
-    expect(result).toEqual(IdeaResponseDto.fromEntities([idea]));
+    expect(listIdeasUseCase.execute).toHaveBeenCalledWith(query);
+    expect(result).toEqual(ListIdeasResponseDto.fromPaginatedEntities(paginatedResult));
   });
 
   it('deve buscar ideia por id e retornar IdeaResponseDto', async () => {

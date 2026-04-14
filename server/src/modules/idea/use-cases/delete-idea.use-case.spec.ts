@@ -5,7 +5,7 @@ import { DeleteIdeaUseCase } from './delete-idea.use-case';
 describe('DeleteIdeaUseCase', () => {
   it('deve deletar ideia quando encontrada', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),
@@ -21,7 +21,7 @@ describe('DeleteIdeaUseCase', () => {
 
   it('deve lançar NotFoundException quando não encontrar ideia', async () => {
     const repository: jest.Mocked<IdeaRepository> = {
-      findAll: jest.fn(),
+      findAllPaginated: jest.fn(),
       findById: jest.fn(),
       create: jest.fn(),
       update: jest.fn(),

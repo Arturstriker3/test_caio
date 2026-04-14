@@ -2,6 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { v7 as uuidv7 } from 'uuid';
 import { DATABASE_POOL } from '../../../common/database/database.config';
+import type { PaginationQueryData } from '../../../common/pagination/dto/pagination-query.dto';
+import { buildPaginatedResult, type PaginatedResult } from '../../../common/pagination/paginated-result';
 import type { CreateIdeaRequestData } from '../dto/create-idea-request.dto';
 import type { UpdateIdeaRequestData } from '../dto/update-idea-request.dto';
 import { IdeaEntity } from '../idea.entity';
@@ -15,6 +17,10 @@ interface IdeaRow extends RowDataPacket {
   benefit: string;
   createdAt: string;
   updatedAt: string;
+}
+
+interface IdeaCountRow extends RowDataPacket {
+  totalItems: number | string;
 }
 
 const IDEA_SELECT = `
@@ -33,9 +39,20 @@ const IDEA_SELECT = `
 export class IdeaMySqlRepository implements IdeaRepository {
   constructor(@Inject(DATABASE_POOL) private readonly pool: Pool) {}
 
-  async findAll(): Promise<IdeaEntity[]> {
-    const [rows] = await this.pool.query<IdeaRow[]>(`${IDEA_SELECT} ORDER BY created_at DESC`);
-    return rows.map((row) => this.toEntity(row));
+  async findAllPaginated(query: PaginationQueryData): Promise<PaginatedResult<IdeaEntity>> {
+    const offset = (query.page - 1) * query.pageSize;
+    const [rows] = await this.pool.query<IdeaRow[]>(`${IDEA_SELECT} ORDER BY created_at DESC LIMIT ? OFFSET ?`, [
+      query.pageSize,
+      offset,
+    ]);
+    const [countRows] = await this.pool.query<IdeaCountRow[]>('SELECT COUNT(*) AS totalItems FROM ideas');
+    const totalItems = Number(countRows[0]?.totalItems ?? 0);
+
+    return buildPaginatedResult(
+      rows.map((row) => this.toEntity(row)),
+      totalItems,
+      query,
+    );
   }
 
   async findById(id: string): Promise<IdeaEntity | null> {
