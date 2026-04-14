@@ -22,4 +22,12 @@ export interface CreateIdeaInput {
   benefit: string;
 }
 
+export interface UpdateIdeaInput extends Partial<CreateIdeaInput> {
+  id: string;
+}
+
+export interface DeleteIdeaInput {
+  id: string;
+}
+
 export type ListIdeasOutput = PaginatedResponse<Idea>;

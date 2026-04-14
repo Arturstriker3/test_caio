@@ -46,5 +46,16 @@ export async function httpRequest<T>(path: string, options?: RequestOptions): Pr
     throw new Error(`Request failed: ${response.status}`);
   }
 
+  if (response.status === 204) {
+    return undefined as T;
+  }
+
+  const responseContentType = response.headers.get('Content-Type') ?? '';
+  const hasJsonContent = responseContentType.includes('application/json');
+
+  if (!hasJsonContent) {
+    return undefined as T;
+  }
+
   return (await response.json()) as T;
 }
