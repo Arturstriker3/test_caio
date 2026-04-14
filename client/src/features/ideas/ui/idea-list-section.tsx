@@ -185,8 +185,8 @@ export function IdeaListSection() {
 
             {ideasQuery.data ? (
               <>
-                <div className="w-full min-w-0 overflow-hidden rounded-xl border border-border/70 bg-background md:hidden">
-                  <ul className="w-full min-w-0 divide-y">
+                <div className="w-full min-w-0 md:hidden">
+                  <ul className="w-full min-w-0 space-y-2">
                     {ideasQuery.data.items.map((idea, index) => {
                       const rowNumber =
                         (summary.currentPage - 1) * pageSize + index + 1;
@@ -195,7 +195,7 @@ export function IdeaListSection() {
                       return (
                         <li
                           key={idea.id}
-                          className="relative w-full min-w-0 overflow-hidden"
+                          className="relative w-full min-w-0 overflow-hidden rounded-lg border border-border/60"
                         >
                           <div
                             aria-hidden
