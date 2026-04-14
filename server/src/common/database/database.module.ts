@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+import { APP_ENV } from '../config/config.constants';
 import { createDatabaseConfig, createDatabasePool, DATABASE_CONFIG, DATABASE_POOL } from './database.config';
 import { DatabaseMigrationService } from './database-migration.service';
 import { DatabaseService } from './database.service';
@@ -8,6 +9,7 @@ import { DatabaseService } from './database.service';
   providers: [
     {
       provide: DATABASE_CONFIG,
+      inject: [APP_ENV],
       useFactory: createDatabaseConfig,
     },
     {

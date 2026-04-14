@@ -1,5 +1,5 @@
 import { createPool, type Pool } from 'mysql2/promise';
-import { loadEnv } from '../config/env';
+import type { AppEnv } from '../config/env';
 
 export const DATABASE_CONFIG = Symbol('DATABASE_CONFIG');
 export const DATABASE_POOL = Symbol('DATABASE_POOL');
@@ -12,9 +12,7 @@ export interface DatabaseConfig {
   database: string;
 }
 
-export function createDatabaseConfig(): DatabaseConfig {
-  const env = loadEnv();
-
+export function createDatabaseConfig(env: AppEnv): DatabaseConfig {
   return {
     host: env.DB_HOST,
     port: env.DB_PORT,
