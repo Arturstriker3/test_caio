@@ -156,8 +156,11 @@ export function IdeaListSection() {
 
   return (
     <>
-      <section className="fade-in-up" style={{ animationDelay: "80ms" }}>
-        <Card className="app-card overflow-hidden border-border/70 shadow-[0_12px_40px_-18px_rgba(15,23,42,0.35)]">
+      <section
+        className="fade-in-up min-w-0"
+        style={{ animationDelay: "80ms" }}
+      >
+        <Card className="app-card w-full min-w-0 max-w-full overflow-hidden border-border/70 shadow-[0_12px_40px_-18px_rgba(15,23,42,0.35)]">
           <CardHeader className="border-b bg-gradient-to-r from-muted/40 via-background to-background">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <CardTitle>Ideias cadastradas</CardTitle>
@@ -167,7 +170,7 @@ export function IdeaListSection() {
             </div>
           </CardHeader>
 
-          <CardContent className="space-y-4 px-3 sm:px-4">
+          <CardContent className="min-w-0 space-y-4 px-3 sm:px-4">
             {ideasQuery.isLoading ? (
               <p className="text-sm text-muted-foreground">
                 Carregando ideias...
@@ -289,7 +292,7 @@ export function IdeaListSection() {
                   </ul>
                 </div>
 
-                <div className="hidden overflow-hidden rounded-xl border border-border/70 bg-background md:block">
+                <div className="hidden min-w-0 max-w-full overflow-hidden rounded-xl border border-border/70 bg-background md:block">
                   <Table>
                     <TableHeader>
                       <TableRow>
@@ -387,6 +390,27 @@ export function IdeaListSection() {
                   Pagina {summary.currentPage} de {summary.totalPages}
                 </span>
               </p>
+
+              <div className="flex items-center justify-end gap-2 sm:hidden">
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  disabled={!hasPreviousPage}
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                >
+                  <ChevronLeftIcon className="size-4" />
+                  <span className="sr-only">Pagina anterior</span>
+                </Button>
+                <Button
+                  size="icon-sm"
+                  variant="outline"
+                  disabled={!hasNextPage}
+                  onClick={() => setPage((current) => current + 1)}
+                >
+                  <ChevronRightIcon className="size-4" />
+                  <span className="sr-only">Proxima pagina</span>
+                </Button>
+              </div>
 
               <div className="hidden min-w-0 max-w-full items-center justify-end gap-2 sm:flex">
                 <div className="flex min-w-0 items-center gap-1.5 text-sm">
