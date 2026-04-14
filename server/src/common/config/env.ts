@@ -10,6 +10,11 @@ const EnvSchema = z.object({
   APP_NAME: z.string().default('Caio'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().min(1).max(65535).default(3000),
+  DB_HOST: z.string().default('127.0.0.1'),
+  DB_PORT: z.coerce.number().int().min(1).max(65535).default(3306),
+  DB_USER: z.string().default('caio'),
+  DB_PASSWORD: z.string().default('caio'),
+  DB_NAME: z.string().default('caiodb'),
 });
 
 export type AppEnv = z.infer<typeof EnvSchema>;
@@ -28,12 +33,15 @@ export function loadEnv(): AppEnv {
 }
 
 function logDefaultedEnvValues(source: NodeJS.ProcessEnv, parsedEnv: AppEnv): void {
+  const sensitiveKeys = new Set<keyof AppEnv>(['DB_PASSWORD']);
+
   for (const key of getSchemaDefaultedKeys()) {
     if (source[key] !== undefined) {
       continue;
     }
 
-    envLogger.warn(`ENV "${key}" not provided. Using default value: ${String(parsedEnv[key])}`);
+    const displayedValue = sensitiveKeys.has(key) ? '******' : String(parsedEnv[key]);
+    envLogger.warn(`ENV "${key}" not provided. Using default value: ${displayedValue}`);
   }
 }
 

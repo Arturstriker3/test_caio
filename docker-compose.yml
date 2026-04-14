@@ -1,0 +1,11 @@
+services:
+  # TODO: adicionar serviços de backend e client neste compose.
+  # backend:
+  # client:
+  mariadb:
+    extends:
+      file: ./docker-compose.database.yml
+      service: mariadb
+
+volumes:
+  mariadb_data:

@@ -1,0 +1,22 @@
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: teste-caio-mariadb
+    restart: on-failure
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: caiodb
+      MARIADB_USER: caio
+      MARIADB_PASSWORD: caio
+    ports:
+      - '3306:3306'
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mariadb-admin', 'ping', '-h', 'localhost', '-u', 'root', '-proot']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  mariadb_data:
