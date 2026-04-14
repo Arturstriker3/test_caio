@@ -1,5 +1,4 @@
 import toast from 'react-hot-toast';
-import { AlertTriangleIcon } from 'lucide-react';
 import { FadeModal } from '../../../components/fade-modal';
 import { Button } from '../../../components/ui/button';
 import { useDeleteIdeaMutation } from '../hooks/use-delete-idea-mutation';
@@ -52,19 +51,6 @@ export function DeleteIdeaConfirmModal({ isOpen, ideaId, ideaTitle, onClose }: D
       }
     >
       <div className="grid gap-4">
-        <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-3">
-          <div className="flex items-start gap-2.5">
-            <span className="mt-0.5 rounded-full bg-destructive/15 p-1.5 text-destructive">
-              <AlertTriangleIcon className="size-4" />
-            </span>
-            <div className="space-y-1">
-              <p className="text-sm font-semibold text-foreground">
-                Confirmacao de exclusao
-              </p>
-            </div>
-          </div>
-        </div>
-
         <p className="text-sm leading-relaxed text-muted-foreground">
           Tem certeza que deseja excluir a ideia?
         </p>
