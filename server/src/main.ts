@@ -11,8 +11,12 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
   const configService = app.get(ConfigService);
   const swagger = configService.swagger;
+  const cors = configService.cors;
   app.useGlobalPipes(new ZodValidationPipe());
   app.enableShutdownHooks();
+  app.enableCors({
+    origin: cors.origin,
+  });
   const swaggerConfig = new DocumentBuilder()
     .setTitle(swagger.title)
     .setDescription(swagger.description)
