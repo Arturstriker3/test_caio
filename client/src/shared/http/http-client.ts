@@ -1,5 +1,5 @@
 interface RequestOptions {
-  method?: 'GET' | 'POST' | 'PATCH' | 'DELETE';
+  method?: "GET" | "POST" | "PATCH" | "DELETE";
   query?: Record<string, string | number | boolean | undefined>;
   body?: unknown;
 }
@@ -8,13 +8,15 @@ function getBaseApiUrl(): string {
   const apiUrl = import.meta.env.VITE_API_URL?.trim();
 
   if (!apiUrl) {
-    throw new Error('VITE_API_URL nao configurada. Defina a variavel no arquivo .env.');
+    throw new Error(
+      "VITE_API_URL nao configurada. Defina a variavel no arquivo .env.",
+    );
   }
 
   return apiUrl;
 }
 
-function buildUrl(path: string, query?: RequestOptions['query']): string {
+function buildUrl(path: string, query?: RequestOptions["query"]): string {
   const baseUrl = getBaseApiUrl();
   const url = new URL(path, baseUrl);
 
@@ -33,13 +35,19 @@ function buildUrl(path: string, query?: RequestOptions['query']): string {
   return url.toString();
 }
 
-export async function httpRequest<T>(path: string, options?: RequestOptions): Promise<T> {
+export async function httpRequest<T>(
+  path: string,
+  options?: RequestOptions,
+): Promise<T> {
+  const hasBody = options?.body !== undefined;
   const response = await fetch(buildUrl(path, options?.query), {
-    method: options?.method ?? 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: options?.body ? JSON.stringify(options.body) : undefined,
+    method: options?.method ?? "GET",
+    headers: hasBody
+      ? {
+          "Content-Type": "application/json",
+        }
+      : undefined,
+    body: hasBody ? JSON.stringify(options.body) : undefined,
   });
 
   if (!response.ok) {
@@ -50,8 +58,8 @@ export async function httpRequest<T>(path: string, options?: RequestOptions): Pr
     return undefined as T;
   }
 
-  const responseContentType = response.headers.get('Content-Type') ?? '';
-  const hasJsonContent = responseContentType.includes('application/json');
+  const responseContentType = response.headers.get("Content-Type") ?? "";
+  const hasJsonContent = responseContentType.includes("application/json");
 
   if (!hasJsonContent) {
     return undefined as T;

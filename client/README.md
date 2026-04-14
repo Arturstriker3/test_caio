@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# D+Ideias Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend do dashboard de ideias, construído com React + TypeScript + Vite.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS 4
+- shadcn/ui + Base UI
+- TanStack Query
+- React Hook Form + Zod
+- React Router
 
-## React Compiler
+## Requisitos
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 20+
+- Backend do projeto (`server`) rodando
 
-## Expanding the ESLint configuration
+## Configuração
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. Entre na pasta do client:
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cd client
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Crie o arquivo de ambiente:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+3. Ajuste a URL da API no `.env` (se necessário):
+
+```env
+VITE_API_URL=http://127.0.0.1:3000
+```
+
+## Rodando localmente
+
+Instale as dependências:
+
+```bash
+npm install
+```
+
+Inicie o projeto:
+
+```bash
+npm run dev
+```
+
+Aplicação disponível em:
+
+- [http://127.0.0.1:5173](http://127.0.0.1:5173)
+
+## Scripts
+
+- `npm run dev`: inicia o servidor de desenvolvimento
+- `npm run build`: gera build de produção
+- `npm run preview`: serve o build localmente
+- `npm run lint`: executa o lint
+
+## Funcionalidades
+
+- Listagem paginada de ideias
+- Criação de nova ideia
+- Edição de ideia
+- Exclusão com modal de confirmação
+- Visualização de detalhes
+- Responsividade (desktop e mobile)
+- Ações por swipe no mobile (editar/excluir)
+- Botão de recarregar lista no header
+
+## Estrutura principal
+
+```text
+src/
+  components/          # Componentes compartilhados e UI base
+  features/ideas/      # Módulo de ideias (hooks, repository, UI, tipos)
+  pages/               # Páginas da aplicação
+  shared/              # HTTP client e utilidades globais
+```
+
+## Observações
+
+- Se `VITE_API_URL` não estiver definida, o app lança erro ao iniciar requisições.
+- O frontend depende da API do backend para CRUD de ideias.

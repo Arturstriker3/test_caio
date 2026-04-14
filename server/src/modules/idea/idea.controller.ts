@@ -43,7 +43,7 @@ export class IdeaController {
 
   @Get(':id')
   @ApiOperation({ summary: 'Get idea by id' })
-  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID identifier.' })
   @ApiOkResponse({ type: IdeaResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid request data.' })
   @ApiNotFoundResponse({ description: 'Idea not found.' })
@@ -63,7 +63,7 @@ export class IdeaController {
 
   @Patch(':id')
   @ApiOperation({ summary: 'Update idea' })
-  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID identifier.' })
   @ApiOkResponse({ type: IdeaResponseDto })
   @ApiBadRequestResponse({ description: 'Invalid request data.' })
   @ApiNotFoundResponse({ description: 'Idea not found.' })
@@ -75,7 +75,7 @@ export class IdeaController {
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: 'Delete idea' })
-  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID identifier.' })
   @ApiNoContentResponse({ description: 'Idea deleted successfully.' })
   @ApiBadRequestResponse({ description: 'Invalid request data.' })
   @ApiNotFoundResponse({ description: 'Idea not found.' })

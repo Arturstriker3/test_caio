@@ -20,7 +20,19 @@ export class ZodValidationPipe implements PipeTransform {
       return Object.assign(new metatype(), parsedValue);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new BadRequestException(error.flatten());
+        const flattenedError = error.flatten();
+        const fieldErrors = Object.entries(flattenedError.fieldErrors)
+          .filter(([, messages]) => Array.isArray(messages) && messages.length > 0)
+          .map(([field, messages]) => ({
+            field,
+            messages: messages as string[],
+          }));
+
+        throw new BadRequestException({
+          message: 'Validation failed.',
+          formErrors: flattenedError.formErrors,
+          fieldErrors,
+        });
       }
 
       throw error;
