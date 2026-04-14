@@ -1,3 +1,4 @@
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import { z } from 'zod';
 import { createIdeaRequestDtoSchema } from './create-idea-request.dto';
 
@@ -10,8 +11,15 @@ export type UpdateIdeaRequestData = z.infer<typeof updateIdeaRequestDtoSchema>;
 export class UpdateIdeaRequestDto {
   static readonly schema = updateIdeaRequestDtoSchema;
 
+  @ApiPropertyOptional({ example: 'Atualizar o fluxo de abertura de chamados internos.' })
   whatCanBeImproved?: string;
+
+  @ApiPropertyOptional({ example: 'Solicitação por e-mail sem SLA definido.' })
   currentProcess?: string;
+
+  @ApiPropertyOptional({ example: 'Portal único com SLA e notificações automáticas.' })
   improvedProcess?: string;
+
+  @ApiPropertyOptional({ example: 'Melhor visibilidade e tempo de atendimento menor.' })
   benefit?: string;
 }

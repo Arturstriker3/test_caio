@@ -15,7 +15,9 @@ interface DatabaseMigration {
 }
 
 interface LoadedMigrationModule {
+  migration?: unknown;
   default?: unknown;
+  [key: string]: unknown;
 }
 
 interface MigrationRow extends RowDataPacket {
@@ -132,7 +134,7 @@ export class DatabaseMigrationService {
     const filePath = resolve(migrationsDir, fileName);
     const fileUrl = pathToFileURL(filePath).href;
     const loadedModule = (await import(fileUrl)) as LoadedMigrationModule;
-    const migration = loadedModule.default;
+    const migration = this.extractMigration(loadedModule);
 
     if (!this.isDatabaseMigration(migration)) {
       throw new Error(`Invalid migration file: ${fileName}`);
@@ -144,6 +146,17 @@ export class DatabaseMigrationService {
       up: migration.up,
       down: migration.down,
     };
+  }
+
+  private extractMigration(loadedModule: LoadedMigrationModule): unknown {
+    const nestedDefault =
+      loadedModule.default && typeof loadedModule.default === 'object'
+        ? (loadedModule.default as LoadedMigrationModule).default
+        : undefined;
+
+    const candidates: unknown[] = [loadedModule.default, loadedModule.migration, nestedDefault, loadedModule];
+
+    return candidates.find((candidate) => this.isDatabaseMigration(candidate));
   }
 
   private isDatabaseMigration(value: unknown): value is DatabaseMigration {
@@ -188,9 +201,9 @@ export class DatabaseMigrationService {
 
   private async resolveMigrationsDirectory(): Promise<string | null> {
     const candidateDirectories = [
-      resolve(process.cwd(), 'src/common/database/migrations'),
-      resolve(process.cwd(), 'dist/common/database/migrations'),
       resolve(__dirname, 'migrations'),
+      resolve(process.cwd(), 'dist/common/database/migrations'),
+      resolve(process.cwd(), 'src/common/database/migrations'),
     ];
 
     for (const directory of candidateDirectories) {

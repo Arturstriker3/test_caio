@@ -1,4 +1,14 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiParam,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateIdeaRequestDto } from './dto/create-idea-request.dto';
 import { IdeaIdParamDto } from './dto/idea-id-param.dto';
 import { IdeaResponseDto } from './dto/idea-response.dto';
@@ -9,6 +19,7 @@ import { GetIdeaDetailsUseCase } from './use-cases/get-idea-details.use-case';
 import { ListIdeasUseCase } from './use-cases/list-ideas.use-case';
 import { UpdateIdeaUseCase } from './use-cases/update-idea.use-case';
 
+@ApiTags('ideas')
 @Controller('ideas')
 export class IdeaController {
   constructor(
@@ -20,24 +31,39 @@ export class IdeaController {
   ) {}
 
   @Get()
+  @ApiOperation({ summary: 'List ideas' })
+  @ApiOkResponse({ type: IdeaResponseDto, isArray: true })
   async listIdeas(): Promise<IdeaResponseDto[]> {
     const ideas = await this.listIdeasUseCase.execute();
     return IdeaResponseDto.fromEntities(ideas);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get idea by id' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiOkResponse({ type: IdeaResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid request data.' })
+  @ApiNotFoundResponse({ description: 'Idea not found.' })
   async getIdeaById(@Param() params: IdeaIdParamDto): Promise<IdeaResponseDto> {
     const idea = await this.getIdeaDetailsUseCase.execute(params.id);
     return IdeaResponseDto.fromEntity(idea);
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create idea' })
+  @ApiCreatedResponse({ type: IdeaResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid request data.' })
   async createIdea(@Body() body: CreateIdeaRequestDto): Promise<IdeaResponseDto> {
     const idea = await this.createIdeaUseCase.execute(body);
     return IdeaResponseDto.fromEntity(idea);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update idea' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiOkResponse({ type: IdeaResponseDto })
+  @ApiBadRequestResponse({ description: 'Invalid request data.' })
+  @ApiNotFoundResponse({ description: 'Idea not found.' })
   async updateIdea(@Param() params: IdeaIdParamDto, @Body() body: UpdateIdeaRequestDto): Promise<IdeaResponseDto> {
     const idea = await this.updateIdeaUseCase.execute(params.id, body);
     return IdeaResponseDto.fromEntity(idea);
@@ -45,6 +71,11 @@ export class IdeaController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiOperation({ summary: 'Delete idea' })
+  @ApiParam({ name: 'id', type: String, description: 'Idea UUID v7 identifier.' })
+  @ApiNoContentResponse({ description: 'Idea deleted successfully.' })
+  @ApiBadRequestResponse({ description: 'Invalid request data.' })
+  @ApiNotFoundResponse({ description: 'Idea not found.' })
   async deleteIdea(@Param() params: IdeaIdParamDto): Promise<void> {
     await this.deleteIdeaUseCase.execute(params.id);
   }
