@@ -1,11 +1,49 @@
 services:
-  # TODO: adicionar serviços de backend e client neste compose.
-  # backend:
-  # client:
   mariadb:
     extends:
       file: ./docker-compose.database.yml
       service: mariadb
+    cpus: "1.0"
+    mem_limit: 1g
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: teste-caio-api
+    restart: on-failure
+    environment:
+      APP_NAME: Caio
+      NODE_ENV: production
+      PORT: 3000
+      CORS_ORIGIN: http://localhost:8080,http://127.0.0.1:8080,http://localhost:5173,http://127.0.0.1:5173
+      SWAGGER_DESCRIPTION: API documentation
+      SWAGGER_VERSION: 1.0.0
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USER: caio
+      DB_PASSWORD: caio
+      DB_NAME: caiodb
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+    cpus: "1.0"
+    mem_limit: 1g
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:3000
+    container_name: teste-caio-client
+    restart: on-failure
+    depends_on:
+      - api
+    ports:
+      - "8080:80"
+    cpus: "1.0"
+    mem_limit: 1g
 
 volumes:
   mariadb_data:

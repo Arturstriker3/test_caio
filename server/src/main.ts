@@ -29,7 +29,7 @@ async function bootstrap() {
   const databaseMigrationService = app.get(DatabaseMigrationService);
   await databaseMigrationService.runPendingMigrations();
 
-  await app.listen(configService.port);
+  await app.listen(configService.port, '0.0.0.0');
 
   const appUrl = await app.getUrl();
   const swaggerUrl = `${appUrl}/docs`;
