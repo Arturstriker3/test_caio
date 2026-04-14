@@ -6,10 +6,10 @@ const migration = {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS ideas (
         id CHAR(36) NOT NULL,
-        what_can_be_improved VARCHAR(2000) NOT NULL,
-        current_process VARCHAR(2000) NOT NULL,
-        improved_process VARCHAR(2000) NOT NULL,
-        benefit VARCHAR(2000) NOT NULL,
+        what_can_be_improved VARCHAR(720) NOT NULL,
+        current_process VARCHAR(360) NOT NULL,
+        improved_process VARCHAR(360) NOT NULL,
+        benefit VARCHAR(360) NOT NULL,
         created_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
         updated_at DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
         PRIMARY KEY (id),

@@ -3,10 +3,12 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from './common/config/config.service';
 import { DatabaseMigrationService } from './common/database/database-migration.service';
+import { ZodValidationPipe } from './common/pipes/zod-validation.pipe';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  app.useGlobalPipes(new ZodValidationPipe());
   app.enableShutdownHooks();
   const databaseMigrationService = app.get(DatabaseMigrationService);
   await databaseMigrationService.runPendingMigrations();

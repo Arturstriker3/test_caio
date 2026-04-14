@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { Pool, ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import { v7 as uuidv7 } from 'uuid';
 import { DATABASE_POOL } from '../../../common/database/database.config';
-import type { CreateIdeaDto } from '../dto/create-idea.dto';
-import type { UpdateIdeaDto } from '../dto/update-idea.dto';
+import type { CreateIdeaRequestData } from '../dto/create-idea-request.dto';
+import type { UpdateIdeaRequestData } from '../dto/update-idea-request.dto';
 import { IdeaEntity } from '../idea.entity';
 import type { IdeaRepository } from './idea.repository.interface';
 
@@ -44,7 +44,7 @@ export class IdeaMySqlRepository implements IdeaRepository {
     return row ? this.toEntity(row) : null;
   }
 
-  async create(input: CreateIdeaDto): Promise<IdeaEntity> {
+  async create(input: CreateIdeaRequestData): Promise<IdeaEntity> {
     const ideaId = uuidv7();
 
     await this.pool.execute<ResultSetHeader>(
@@ -72,7 +72,7 @@ export class IdeaMySqlRepository implements IdeaRepository {
     return createdIdea;
   }
 
-  async update(id: string, input: UpdateIdeaDto): Promise<IdeaEntity | null> {
+  async update(id: string, input: UpdateIdeaRequestData): Promise<IdeaEntity | null> {
     const fields: string[] = [];
     const values: string[] = [];
 

@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
-import { parseCreateIdeaDto } from './dto/create-idea.dto';
-import { parseIdeaIdDto } from './dto/idea-id.dto';
-import { parseUpdateIdeaDto } from './dto/update-idea.dto';
-import { IdeaEntity } from './idea.entity';
+import { CreateIdeaRequestDto } from './dto/create-idea-request.dto';
+import { IdeaIdParamDto } from './dto/idea-id-param.dto';
+import { IdeaResponseDto } from './dto/idea-response.dto';
+import { UpdateIdeaRequestDto } from './dto/update-idea-request.dto';
 import { CreateIdeaUseCase } from './use-cases/create-idea.use-case';
 import { DeleteIdeaUseCase } from './use-cases/delete-idea.use-case';
 import { GetIdeaDetailsUseCase } from './use-cases/get-idea-details.use-case';
@@ -20,33 +20,32 @@ export class IdeaController {
   ) {}
 
   @Get()
-  async listIdeas(): Promise<IdeaEntity[]> {
-    return this.listIdeasUseCase.execute();
+  async listIdeas(): Promise<IdeaResponseDto[]> {
+    const ideas = await this.listIdeasUseCase.execute();
+    return IdeaResponseDto.fromEntities(ideas);
   }
 
   @Get(':id')
-  async getIdeaById(@Param('id') idParam: string): Promise<IdeaEntity> {
-    const id = parseIdeaIdDto(idParam);
-    return this.getIdeaDetailsUseCase.execute(id);
+  async getIdeaById(@Param() params: IdeaIdParamDto): Promise<IdeaResponseDto> {
+    const idea = await this.getIdeaDetailsUseCase.execute(params.id);
+    return IdeaResponseDto.fromEntity(idea);
   }
 
   @Post()
-  async createIdea(@Body() body: unknown): Promise<IdeaEntity> {
-    const input = parseCreateIdeaDto(body);
-    return this.createIdeaUseCase.execute(input);
+  async createIdea(@Body() body: CreateIdeaRequestDto): Promise<IdeaResponseDto> {
+    const idea = await this.createIdeaUseCase.execute(body);
+    return IdeaResponseDto.fromEntity(idea);
   }
 
   @Patch(':id')
-  async updateIdea(@Param('id') idParam: string, @Body() body: unknown): Promise<IdeaEntity> {
-    const id = parseIdeaIdDto(idParam);
-    const input = parseUpdateIdeaDto(body);
-    return this.updateIdeaUseCase.execute(id, input);
+  async updateIdea(@Param() params: IdeaIdParamDto, @Body() body: UpdateIdeaRequestDto): Promise<IdeaResponseDto> {
+    const idea = await this.updateIdeaUseCase.execute(params.id, body);
+    return IdeaResponseDto.fromEntity(idea);
   }
 
   @Delete(':id')
   @HttpCode(204)
-  async deleteIdea(@Param('id') idParam: string): Promise<void> {
-    const id = parseIdeaIdDto(idParam);
-    await this.deleteIdeaUseCase.execute(id);
+  async deleteIdea(@Param() params: IdeaIdParamDto): Promise<void> {
+    await this.deleteIdeaUseCase.execute(params.id);
   }
 }

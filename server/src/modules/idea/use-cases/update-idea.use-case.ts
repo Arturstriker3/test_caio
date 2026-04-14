@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import type { UpdateIdeaDto } from '../dto/update-idea.dto';
+import type { UpdateIdeaRequestData } from '../dto/update-idea-request.dto';
 import { IdeaEntity } from '../idea.entity';
 import { IDEA_REPOSITORY, type IdeaRepository } from '../repository/idea.repository.interface';
 
@@ -7,7 +7,7 @@ import { IDEA_REPOSITORY, type IdeaRepository } from '../repository/idea.reposit
 export class UpdateIdeaUseCase {
   constructor(@Inject(IDEA_REPOSITORY) private readonly ideaRepository: IdeaRepository) {}
 
-  async execute(id: string, input: UpdateIdeaDto): Promise<IdeaEntity> {
+  async execute(id: string, input: UpdateIdeaRequestData): Promise<IdeaEntity> {
     const updatedIdea = await this.ideaRepository.update(id, input);
 
     if (!updatedIdea) {
