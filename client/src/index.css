@@ -62,6 +62,7 @@
 body {
   margin: 0;
   min-height: 100vh;
+  overflow-x: hidden;
   background:
     radial-gradient(circle at 0% 0%, rgba(37, 99, 235, 0.12), transparent 34%),
     radial-gradient(circle at 100% 100%, rgba(29, 78, 216, 0.12), transparent 36%),
@@ -70,6 +71,7 @@ body {
 
 #root {
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .page-shell {

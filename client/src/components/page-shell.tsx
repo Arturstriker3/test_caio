@@ -9,7 +9,7 @@ interface PageShellProps {
 
 export function PageShell({ title, description, headerAction, children }: PageShellProps) {
   return (
-    <main className="page-shell flex min-h-screen flex-col gap-6">
+    <main className="page-shell flex min-h-screen flex-col gap-6 overflow-x-hidden">
       <header className="fade-in-up grid gap-4">
         <div className="app-card overflow-hidden p-0">
           <div className="rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-white to-indigo-50 p-5 md:p-7">
