@@ -6,7 +6,7 @@ const migration = {
     await connection.query(`
       CREATE TABLE IF NOT EXISTS ideas (
         id CHAR(36) NOT NULL,
-        what_can_be_improved VARCHAR(720) NOT NULL,
+        what_can_be_improved VARCHAR(180) NOT NULL,
         current_process VARCHAR(360) NOT NULL,
         improved_process VARCHAR(360) NOT NULL,
         benefit VARCHAR(360) NOT NULL,

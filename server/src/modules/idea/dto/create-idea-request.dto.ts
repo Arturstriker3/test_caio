@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { z } from 'zod';
 
 export const createIdeaRequestDtoSchema = z.object({
-  whatCanBeImproved: z.string().trim().min(1).max(720),
+  whatCanBeImproved: z.string().trim().min(1).max(180),
   currentProcess: z.string().trim().min(1).max(360),
   improvedProcess: z.string().trim().min(1).max(360),
   benefit: z.string().trim().min(1).max(360),
