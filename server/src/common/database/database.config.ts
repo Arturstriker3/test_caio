@@ -1,6 +1,8 @@
+import { createPool, type Pool } from 'mysql2/promise';
 import { loadEnv } from '../config/env';
 
 export const DATABASE_CONFIG = Symbol('DATABASE_CONFIG');
+export const DATABASE_POOL = Symbol('DATABASE_POOL');
 
 export interface DatabaseConfig {
   host: string;
@@ -20,4 +22,18 @@ export function createDatabaseConfig(): DatabaseConfig {
     password: env.DB_PASSWORD,
     database: env.DB_NAME,
   };
+}
+
+export function createDatabasePool(config: DatabaseConfig): Pool {
+  return createPool({
+    host: config.host,
+    port: config.port,
+    user: config.user,
+    password: config.password,
+    database: config.database,
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0,
+    enableKeepAlive: true,
+  });
 }
